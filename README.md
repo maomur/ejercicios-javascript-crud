@@ -12,5 +12,5 @@
     - DOM
 
 
-![Screen Versión](https://raw.githubusercontent.com/maomur/ejercicios-javascript-crud/main/img/bg-real-state.png)
+![Screen Versión](https://github.com/maomur/ejercicios-javascript-crud/blob/main/img/inmobilapp.png)
 
