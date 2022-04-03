@@ -12,5 +12,5 @@
     - DOM
 
 
-![Screen Versión](https://raw.githubusercontent.com/maomur/ejercicios-javascript-crud/main/images/bg-real-state.png)
+![Screen Versión](https://raw.githubusercontent.com/maomur/main/ejercicios-javascript-crud/main/images/bg-real-state.png)
 
