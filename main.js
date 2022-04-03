@@ -18,6 +18,8 @@ class App {
     boxIcons = document.querySelector('#boxIcons');
     containerItems = document.querySelector('#containerItems');
 
+
+
     constructor(){
         this.btnAdd.addEventListener('click', (e) => {
             e.preventDefault();
@@ -50,9 +52,7 @@ class App {
             liTitle.append(item.title);
             this.boxTitle.append(liTitle);
             
-            
-            //REEMPLAZAR EL BOOLEAN TRUE / FALSE
-            
+                       
             //Creamos elemento Li para el input SALE del Item
             const liSell = document.createElement('li');
             liSell.classList.add('list-unstyled', 'my-1');
@@ -93,6 +93,12 @@ class App {
             const iconView = document.createElement('span');
             iconView.classList.add('iconView', 'mx-1', 'ico', 'mb-1');
             iconView.dataset.id = item.id;
+
+            if(item.iconView){
+                this.newIconView = iconView.innerHTML = '❤'
+            } else {
+                this.newIconView = iconView.innerHTML = '🤍'
+            }
             iconView.innerHTML = '👁‍🗨';
             
             const iconEdit = document.createElement('span');
@@ -141,9 +147,18 @@ class App {
         console.log('update ok')
     }
 
-
+    //NO FUNCIONA AÚN
     viewItem(e){
-        console.log('no pude')
+        this.arrayItems = 
+        this.arrayItems.map( (item)=> {
+            if(item.id === e.target.dataset.id){
+                return {...item, iconView: !item.iconView}
+            } else{
+                return item
+            }
+        })
+        this.readtItems();
+        console.log(this.arrayItems)
     }
 
 
@@ -157,16 +172,6 @@ class App {
         });
         this.readtItems();
     }
-
-
-    // if(inputSell.checked === true){
-    //     console.log('SI');
-    //     this.boxSell.innerHTML = "SI";
-    // }else{
-    //     console.log('NO');
-    //     this.boxSell.innerHTML = "NO";
-    // }
-
 
 }
 

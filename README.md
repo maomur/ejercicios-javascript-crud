@@ -1,6 +1,6 @@
 # EJERCICIO JAVASCRIPT
 
-## CRUD (Create, Read, Update, Delet)
+## CRUD (Create, Read, Update, Delete)
 
 ### Metodología:
 - Maquetación básica HTML, Bootstrap y CSS
