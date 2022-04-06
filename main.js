@@ -17,6 +17,8 @@ class App {
     boxPrice = document.querySelector('#boxPrice');
     boxIcons = document.querySelector('#boxIcons');
     containerItems = document.querySelector('#containerItems');
+    editMode = false;
+    currentId = 0;
 
 
 
@@ -29,10 +31,16 @@ class App {
 
 
     handleClick(){
-        const newItem = new Item(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
-        this.arrayItems.push(newItem);
-        this.createItem();
-        this.containerItems.className = 'd-block';
+
+        if(this.editMode){
+            this.updateItem(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
+        }else{
+            const newItem = new Item(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
+            this.arrayItems.push(newItem);
+            this.createItem();
+            this.containerItems.className = 'd-block';
+        }
+
 
     }
     
@@ -116,13 +124,13 @@ class App {
 
             //LISTENERS
             iconDelet.addEventListener('click', (e)=> this.deleteItem(e));
-            iconEdit.addEventListener('click', ()=> this.editItem());
+            iconEdit.addEventListener('click', ()=> this.editItem(item.id));
             iconView.addEventListener('click', (e)=> this.viewItem(e));
             
 
 
-            this.inputPrice.value = "";
             this.inputTitle.value = "";
+            this.inputPrice.value = "";
             this.inputSell.checked = "";
             this.inputRent.checked = "";
             this.inputTitle.focus();
@@ -138,13 +146,35 @@ class App {
 
  
 
-    editItem(){
-        console.log('editItem OK')
+    editItem(id){
+        const itemUpdate = this.arrayItems.find( (item)=> { 
+            return item.id === id})
+            console.log(itemUpdate)
+
+            this.inputTitle.value = itemUpdate.title;
+            this.inputPrice.value = itemUpdate.price;
+            this.inputSell.checked = itemUpdate.sell;
+            this.inputRent.checked = itemUpdate.rent;
+            this.editMode = true;
+            this.currentId = itemUpdate.id;
+            this.btnAdd.innerText = "Actualizar";
+            this.btnAdd.classList.replace('btn-dark', 'btn-success')
+
     }
 
-
-    updateItem(){
-        console.log('update ok')
+    updateItem(inputTitle, inputPrice, inputRent, inputSell){
+        this.arrayItems = this.arrayItems.map( (item)=> {
+            if(item.id === this.currentId){
+                return {...item, title: inputTitle, price: inputPrice, rent: inputRent, sell: inputSell}
+            }else{
+                return item;
+            }
+        })
+        this.readtItems();
+        this.currentId = 0;
+        this.editMode = false;
+        this.btnAdd.innerText = "Añadir";
+        this.btnAdd.classList.replace('btn-success', 'btn-dark')
     }
 
     //NO FUNCIONA AÚN
