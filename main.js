@@ -17,6 +17,9 @@ class App {
     boxPrice = document.querySelector('#boxPrice');
     boxIcons = document.querySelector('#boxIcons');
     containerItems = document.querySelector('#containerItems');
+    btnSort = document.querySelector('#sort');
+    btnUnseen = document.querySelector('#unseen');
+    btnViewAll = document.querySelector('#viewAll');
     editMode = false;
     currentId = 0;
 
@@ -27,24 +30,78 @@ class App {
             e.preventDefault();
             this.handleClick();
         })
+        
+        
+        if(localStorage.getItem('ITEMS')){
+            this.arrayItems = JSON.parse(localStorage.getItem('ITEMS'));
+            this.readtItems();  
+        } else {
+            localStorage.setItem('ITEMS', []);
+        }
+
+        
+        
+        this.btnSort.addEventListener('click', ()=> {
+            this.sortItems();
+        })
+        //POR QUÉ NO FUNCIONA?
+        this.btnViewAll.addEventListener('click', ()=> {
+            this.viewAll();
+        })
+
+        this.btnUnseen.addEventListener('click', ()=> {
+            this.unSeen();
+        })
+    }
+    
+    //POR QUÉ NO FUNCIONA?
+    viewAll(){
+       this.readtItems();
     }
 
+    unSeen(){
+        this.arrayItems = this.arrayItems.filter( (item)=> {
+            if(item.iconView === false){
+                return
+            }
+        })
+    }
+
+    sortItems(){
+        this.arrayItems.sort( (itemA, itemB)=> {
+            if(itemA.title > itemB.title){
+                return 1;
+            } else {
+                return -1
+            }
+        });
+        this.readtItems();
+    }
 
     handleClick(){
 
         if(this.editMode){
             this.updateItem(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
         }else{
-            const newItem = new Item(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
-            this.arrayItems.push(newItem);
-            this.createItem();
-            this.containerItems.className = 'd-block';
+            this.addItem(inputTitle, inputPrice, inputRent, inputSell);
         }
-
-
     }
     
-    
+
+    updateLocalS(){
+            localStorage.setItem('ITEMS', JSON.stringify(this.arrayItems));
+    }
+
+    addItem(inputTitle, inputPrice, inputRent, inputSell){
+        const newItem = new Item(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
+            this.arrayItems.push(newItem);
+            this.containerItems.className = 'd-block';
+
+            this.updateLocalS();
+
+            this.createItem();
+    }
+
     createItem(){
         this.boxPrice.innerHTML = "";
         this.boxRent.innerHTML = "";
@@ -55,7 +112,7 @@ class App {
         this.arrayItems.forEach( (item) => {
             //Creamos elemento Li para el TÍTULO del Item
             const liTitle = document.createElement('li');
-            liTitle.classList.add();
+            liTitle.classList.add('my-2', 'border-item');
             liTitle.dataset.id = item.id;
             liTitle.append(item.title);
             this.boxTitle.append(liTitle);
@@ -63,7 +120,7 @@ class App {
                        
             //Creamos elemento Li para el input SALE del Item
             const liSell = document.createElement('li');
-            liSell.classList.add('list-unstyled', 'my-1');
+            liSell.classList.add('list-unstyled', 'my-2', 'border-item');
 
             if(item.sell){
                 this.newItemSell = liSell.innerHTML = '✔'
@@ -74,7 +131,7 @@ class App {
             
             //Creamos elemento Li para el input RENT del Item
             const liRent = document.createElement('li');
-            liRent.classList.add('list-unstyled', 'my-1');
+            liRent.classList.add('list-unstyled', 'my-2', 'border-item');
 
             if(item.rent){
                 this.newItemRent = liRent.innerHTML = '✔'
@@ -86,7 +143,7 @@ class App {
             
             //Creamos elemento Li para el input PRICE del Item
             const liPrice = document.createElement('li');
-            liPrice.classList.add('list-unstyled', 'my-1');
+            liPrice.classList.add('list-unstyled', 'my-2', 'border-item');
             liPrice.append(item.price);
             boxPrice.append(liPrice);
             this.inputPrice.checked = "";
@@ -99,28 +156,29 @@ class App {
             
             
             const iconView = document.createElement('span');
-            iconView.classList.add('iconView', 'mx-1', 'ico', 'mb-1');
             iconView.dataset.id = item.id;
 
-            if(item.iconView){
-                this.newIconView = iconView.innerHTML = '❤'
+            iconView.innerHTML = '⬛';
+            if(item.iconView === true){
+                this.newViewIcon = iconView.innerHTML = '✅';
             } else {
-                this.newIconView = iconView.innerHTML = '🤍'
+                this.newViewIcon = iconView.innerHTML = '⬛';
             }
-            iconView.innerHTML = '👁‍🗨';
-            
+            iconView.classList.add('iconEdit', 'ico', 'border-item', 'mx-2');
+
             const iconEdit = document.createElement('span');
-            iconEdit.classList.add('iconEdit', 'ico');
+            iconEdit.classList.add('iconEdit', 'ico', 'border-item', 'mb-2');
             iconEdit.dataset.id = item.id;
             iconEdit.innerHTML = '📝';
             
             const iconDelet = document.createElement('span');
-            iconDelet.classList.add('iconDelet', 'ico');
+            iconDelet.classList.add('iconDelet', 'ico', 'border-item', 'mb-2');
             iconDelet.dataset.id = item.id;
             iconDelet.innerHTML = '🗑';
             
             li.append(iconView, iconEdit, iconDelet);
             this.boxIcons.append(li);
+
 
             //LISTENERS
             iconDelet.addEventListener('click', (e)=> this.deleteItem(e));
@@ -158,8 +216,7 @@ class App {
             this.editMode = true;
             this.currentId = itemUpdate.id;
             this.btnAdd.innerText = "Actualizar";
-            this.btnAdd.classList.replace('btn-dark', 'btn-success')
-
+            this.btnAdd.classList.replace('btn-dark', 'btn-success');
     }
 
     updateItem(inputTitle, inputPrice, inputRent, inputSell){
@@ -170,25 +227,28 @@ class App {
                 return item;
             }
         })
-        this.readtItems();
         this.currentId = 0;
         this.editMode = false;
         this.btnAdd.innerText = "Añadir";
-        this.btnAdd.classList.replace('btn-success', 'btn-dark')
+        this.btnAdd.classList.replace('btn-success', 'btn-dark');
+        this.readtItems();
+        this.updateLocalS();
     }
 
     //NO FUNCIONA AÚN
     viewItem(e){
+        
+        //console.log(e.target.dataset.id);
         this.arrayItems = 
         this.arrayItems.map( (item)=> {
             if(item.id === e.target.dataset.id){
-                return {...item, iconView: !item.iconView}
-            } else{
-                return item
-            }
-        })
-        this.readtItems();
-        console.log(this.arrayItems)
+                 return alert('entró en if')
+             } else {
+                 return item
+             }
+         })
+         this.updateLocalS();
+         this.readtItems();
     }
 
 
@@ -200,6 +260,7 @@ class App {
         this.arrayItems = this.arrayItems.filter((item)=> {
             return item.id != e.target.dataset.id;
         });
+        this.updateLocalS();
         this.readtItems();
     }
 
