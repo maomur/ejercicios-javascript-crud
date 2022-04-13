@@ -35,18 +35,12 @@ class App {
         if(localStorage.getItem('ITEMS')){
             this.arrayItems = JSON.parse(localStorage.getItem('ITEMS'));
             this.readtItems();  
-        } else {
-            localStorage.setItem('ITEMS', []);
         }
 
         
         
         this.btnSort.addEventListener('click', ()=> {
             this.sortItems();
-        })
-        //POR QUÉ NO FUNCIONA?
-        this.btnViewAll.addEventListener('click', ()=> {
-            this.viewAll();
         })
 
         this.btnUnseen.addEventListener('click', ()=> {
