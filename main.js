@@ -19,7 +19,9 @@ class App {
     containerItems = document.querySelector('#containerItems');
     btnSort = document.querySelector('#sort');
     btnUnseen = document.querySelector('#unseen');
-    btnViewAll = document.querySelector('#viewAll');
+    filterType = document.querySelector('#filter');
+    btnClearLS = document.querySelector('#clearLS')
+    
     editMode = false;
     currentId = 0;
 
@@ -37,20 +39,41 @@ class App {
             this.readtItems();  
         }
 
-        
+        this.btnClearLS.addEventListener('click', ()=> {
+            const confirmClear = confirm('¿Está seguro que desea borrar TODA la información de la aplicaicón?');
+            if(!confirmClear){
+                return;
+            }
+            localStorage.clear();
+            location.reload();
+        });
         
         this.btnSort.addEventListener('click', ()=> {
             this.sortItems();
         })
 
         this.btnUnseen.addEventListener('click', ()=> {
-            this.unSeen();
+            this.unSeen(this.item.id);
         })
+
+        this.filterType.addEventListener('change', ()=> {
+            this.filter();
+        })
+
+        
     }
     
-    //POR QUÉ NO FUNCIONA?
-    viewAll(){
-       this.readtItems();
+
+    filter(item){
+
+        if(item.rent.checked === true){            
+            this.arrayItems = this.arrayItems.filter( (item) => {
+                return item.type === this.filterType.value
+                
+                // return item.type === this.filterType.value
+            })
+        }
+        this.readtItems();
     }
 
     unSeen(){
@@ -106,8 +129,8 @@ class App {
         this.arrayItems.forEach( (item) => {
             //Creamos elemento Li para el TÍTULO del Item
             const liTitle = document.createElement('li');
-            liTitle.classList.add('my-2', 'border-item');
             liTitle.dataset.id = item.id;
+            liTitle.classList.add('my-2', 'border-item');
             liTitle.append(item.title);
             this.boxTitle.append(liTitle);
             
@@ -152,7 +175,6 @@ class App {
             const iconView = document.createElement('span');
             iconView.dataset.id = item.id;
 
-            iconView.innerHTML = '⬛';
             if(item.iconView === true){
                 this.newViewIcon = iconView.innerHTML = '✅';
             } else {
@@ -177,7 +199,7 @@ class App {
             //LISTENERS
             iconDelet.addEventListener('click', (e)=> this.deleteItem(e));
             iconEdit.addEventListener('click', ()=> this.editItem(item.id));
-            iconView.addEventListener('click', (e)=> this.viewItem(e));
+            iconView.addEventListener('click', ()=> this.viewItem(item.id));
             
 
 
@@ -213,10 +235,10 @@ class App {
             this.btnAdd.classList.replace('btn-dark', 'btn-success');
     }
 
-    updateItem(inputTitle, inputPrice, inputRent, inputSell){
+    updateItem(inputTitle, inputPrice, inputRent, inputSell, filterType){
         this.arrayItems = this.arrayItems.map( (item)=> {
             if(item.id === this.currentId){
-                return {...item, title: inputTitle, price: inputPrice, rent: inputRent, sell: inputSell}
+                return {...item, title: inputTitle, price: inputPrice, rent: inputRent, sell: inputSell, type: filterType}
             }else{
                 return item;
             }
@@ -230,19 +252,19 @@ class App {
     }
 
     //NO FUNCIONA AÚN
-    viewItem(e){
-        
-        //console.log(e.target.dataset.id);
+    viewItem(id){
         this.arrayItems = 
         this.arrayItems.map( (item)=> {
-            if(item.id === e.target.dataset.id){
-                 return alert('entró en if')
+            if(item.id === id){
+                return {...item, iconView: !this.iconView};
              } else {
-                 return item
+                 return item;
              }
          })
          this.updateLocalS();
+         console.log(this.arrayItems)
          this.readtItems();
+         
     }
 
 

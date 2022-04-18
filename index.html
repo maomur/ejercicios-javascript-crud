@@ -47,12 +47,19 @@
         </form>
 
 
-        <div class="text-end">
-            <button id="sort" name="sort" class="btn btn-light pb-2">Ordenar A-Z</button>
-            <button id="unseen" name="unseen" class="btn btn-light pb-2">Mostrar No Vistas</button>
+        <div class="d-flex justify-content-end">
+            <button id="clearLS" class="form-control w-auto btn btn-warning m-2">Borrar Todo</button>
+            <button id="sort" name="sort" class="btn btn-light m-2">Ordenar A-Z</button>
+            <button id="unseen" name="unseen" class="btn btn-light m-2">Mostrar No Vistas</button>
+
+            <select name="type" id="filter" class="form-control w-auto m-2">
+                <option value="all" class="" name="all">Todas</option>
+                <option value="alquler" class="">Alquiler</option>
+                <option value="venta" class="venta">Venta</option>
+            </select>
             
         </div>
-        <div id="containerItems" class="container p-5">
+        <div id="containerItems" class="container ">
 
             <h2 class="text-light fs-4 text-center mb-4">Mis Propiedades</h2>
                 <div class="row p-5 bg-result rounded">
