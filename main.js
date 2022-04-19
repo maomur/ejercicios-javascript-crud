@@ -53,7 +53,7 @@ class App {
         })
 
         this.btnUnseen.addEventListener('click', ()=> {
-            this.unSeen(this.item.id);
+            this.unSeen();
         })
 
         this.filterType.addEventListener('change', ()=> {
@@ -69,9 +69,7 @@ class App {
         if(item.rent.checked === true){            
             this.arrayItems = this.arrayItems.filter( (item) => {
                 return item.type === this.filterType.value
-                
-                // return item.type === this.filterType.value
-            })
+                })
         }
         this.readtItems();
     }
@@ -79,9 +77,10 @@ class App {
     unSeen(){
         this.arrayItems = this.arrayItems.filter( (item)=> {
             if(item.iconView === false){
-                return
+                return item;
             }
         })
+        this.readtItems();
     }
 
     sortItems(){
@@ -251,18 +250,17 @@ class App {
         this.updateLocalS();
     }
 
-    //NO FUNCIONA AÚN
     viewItem(id){
         this.arrayItems = 
         this.arrayItems.map( (item)=> {
             if(item.id === id){
-                return {...item, iconView: !this.iconView};
+                item.changeSeen()
+                return item;
              } else {
                  return item;
              }
          })
          this.updateLocalS();
-         console.log(this.arrayItems)
          this.readtItems();
          
     }

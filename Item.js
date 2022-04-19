@@ -9,7 +9,7 @@ export class Item {
         this.type = type;
         this.id = Math.ceil(Math.random() * 1000);
     }
-    // changeSeen(){
-    //     this.iconView = !this.iconView;
-    // }
+    changeSeen(){
+         this.iconView = !this.iconView;
+     }
 }   
