@@ -35,7 +35,14 @@ class App {
         
         
         if(localStorage.getItem('ITEMS')){
-            this.arrayItems = JSON.parse(localStorage.getItem('ITEMS'));
+            const itemsFromLS = JSON.parse(localStorage.getItem('ITEMS'));
+
+            this.arrayItems = itemsFromLS.map( (item)=> {
+                const newItem = new Item(item.title, item.price, item.rent, item.sell);
+                newItem.id = item.id;
+                return newItem;
+            })
+
             this.readtItems();  
         }
 
@@ -63,14 +70,16 @@ class App {
         
     }
     
+    //NO FUNCIONA!!!!!!!!!
 
-    filter(item){
+    filter(){
+        this.arrayItems = this.arrayItems.filter( (item)=> {
 
-        if(item.rent.checked === true){            
-            this.arrayItems = this.arrayItems.filter( (item) => {
-                return item.type === this.filterType.value
-                })
-        }
+            if(item.type === this.inputRent.value){
+                return item.type;
+            }
+            })
+  
         this.readtItems();
     }
 
@@ -111,7 +120,6 @@ class App {
     addItem(inputTitle, inputPrice, inputRent, inputSell){
         const newItem = new Item(inputTitle.value, inputPrice.value, inputRent.checked, inputSell.checked);
             this.arrayItems.push(newItem);
-            this.containerItems.className = 'd-block';
 
             this.updateLocalS();
 
